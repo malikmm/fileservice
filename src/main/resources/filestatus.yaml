@@ -1,0 +1,89 @@
+openapi: "3.0.2"
+info:
+  version: 1.0.0
+  title: File Service
+  license:
+    name: M.Malik
+#servers:
+#  - url: http://petstore.swagger.io/v1
+paths:
+  /filestatus:
+    post:
+      summary: Return stored proc stub data
+      description: Return stored proc stub data for file status
+      operationId: getFileStatus
+      tags:
+        - filestatus
+      requestBody:
+        description: Data to update file status
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/fileStatusRecord"
+        required: true
+      responses:
+        200:
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/sql_return"
+        404:
+          description: Record not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: Server not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    fileStatusRecord:
+      properties:
+        requestGuid:
+          type: string
+        fileId:
+          type: integer
+          format: int32
+        remappingBatchId:
+          type: integer
+          format: int32
+        filevalue:
+          type: array
+          items:
+            $ref: "#/components/schemas/updateGramRecord"
+
+    updateGramRecord:
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+
+    sql_return:
+      required:
+        - sql_code
+        - sql_message
+      properties:
+        sql_code:
+          type: integer
+          format: int32
+        sql_message:
+          type: string
+
+    Error:
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
